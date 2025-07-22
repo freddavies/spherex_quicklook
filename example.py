@@ -15,10 +15,10 @@ flam_old = xsp[:,1]*1e-16
 
 zqso = 4.85
 label = 'J0916-2511, z=4.85'
-plot_spherex_flam(wave,flam,std,zqso=zqso,label=label,wave_old=wave_old,flam_old=flam_old)
+plot_spherex_flam(wave,flam,std,dwave,zqso=zqso,label=label,wave_old=wave_old,flam_old=flam_old)
 
 fnu = get_fnu_from_flam(wave,flam)
 std_fnu = get_fnu_from_flam(wave,std)
 fnu_old = get_fnu_from_flam(wave_old,flam_old)
-plot_spherex_fnu(wave,fnu,std_fnu,zqso=zqso,label=label,wave_old=wave_old,fnu_old=fnu_old)
+plot_spherex_fnu(wave,fnu,std_fnu,dwave,zqso=zqso,label=label,wave_old=wave_old,fnu_old=fnu_old)
 

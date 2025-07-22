@@ -119,7 +119,7 @@ def rebin_spherex(wave,flam,std,dwave,tol=0.1): # very basic binning scheme
 
 line_list = [6564.6,5008.2,4862.7,2800.0,1908.7,1550.0,1215.67]
 
-def plot_spherex_flam(wave,flam,std,zqso=None,label=None,wave_old=None,flam_old=None,flam2=None):
+def plot_spherex_flam(wave,flam,std,dwave,zqso=None,label=None,wave_old=None,flam_old=None,flam2=None):
     fig,ax = plt.subplots(1,1,figsize=(9,5))
     plt.errorbar(wave,flam,c='k',fmt='o',xerr=0.5*dwave,yerr=std,label=label,ms=3.5)
     if flam2 is not None:
@@ -140,7 +140,7 @@ def plot_spherex_flam(wave,flam,std,zqso=None,label=None,wave_old=None,flam_old=
     plt.tight_layout()
     plt.show()
 
-def plot_spherex_fnu(wave,fnu,std,zqso=None,label=None,wave_old=None,fnu_old=None,fnu2=None):
+def plot_spherex_fnu(wave,fnu,std,dwave,zqso=None,label=None,wave_old=None,fnu_old=None,fnu2=None):
     fig,ax = plt.subplots(1,1,figsize=(9,5))
     plt.errorbar(wave,fnu,c='k',fmt='o',xerr=0.5*dwave,yerr=std,label=label,ms=3.5)
     if fnu2 is not None:
