@@ -14,7 +14,7 @@ def extract_spherex(directory, mask2 = None, cr_thresh=10):
         flux2 = np.zeros(len(files))
     var = np.zeros(len(files))
 
-    good = np.ones(len(files))
+    good = np.ones(len(files),dtype=bool)
 
     for ii in range(len(files)):
         hdul = fits.open(files[ii])
@@ -25,19 +25,18 @@ def extract_spherex(directory, mask2 = None, cr_thresh=10):
             # Object extraction mask, central 2x2 pixels of cutout
             # definitely suboptimal (PSF FWHM can be <1 pixel)
             # but should capture most of the light even at the long wavelength end
-            mask = np.zeros_like(img)
-            mask[2:4,2:4] = 1
-            mask = mask.astype(bool)
+            mask = np.zeros_like(img,dtype=bool)
+            mask[2:4,2:4] = True
             mask[np.isnan(img)] = False # remove phantom pixels
 
             # Sky mask is everything else
             sky = ~mask
             if mask2 is not None: # In case there is a second contaminating object
-                mask2 = mask2.astype(bool)
                 sky = sky & ~mask2
             sky[np.isnan(sky)] = False # remove phantom pixels
             
             # "Aperture photometry"
+            # Sum the flux inside the object mask, remove the median sky times the number of object pixels
             flux[ii] = np.sum(img[mask])-np.median(img[sky])*(np.sum(mask))
             if mask2 is not None:
                 flux2[ii] = np.sum(img[mask2])-np.median(img[sky])*(np.sum(mask2))
@@ -53,8 +52,8 @@ def extract_spherex(directory, mask2 = None, cr_thresh=10):
             wave[ii] = interp_wave((3-hdul[1].header['CRPIX2W'],3-hdul[1].header['CRPIX1W']))
             dwave[ii] = interp_dwave((3-hdul[1].header['CRPIX2W'],3-hdul[1].header['CRPIX1W']))
             
-            # Extremely rough estimate of the variance (full images have a variance map, but not cutouts...)
-            # First remove the highest and lowest pixels from the sky (outlier masking)
+            # Extremely rough estimate of the variance (full images have a proper variance map, but not cutouts...)
+            # First remove the highest and lowest pixels from the sky (sort of like outlier masking)
             skymask = sky & (img > img[sky].min()) & (img < img[sky].max())
             # Variance of each pixel is first approximated by variance of sky pixels
             var[ii] = np.sum(mask)*np.var(img[skymask])
@@ -64,12 +63,11 @@ def extract_spherex(directory, mask2 = None, cr_thresh=10):
             var[ii] *= 1+np.sum(((img[mask]-np.median(img[sky]))/np.median(img[sky]))[posmask])
             
         else:
-            good[ii] = 0
+            good[ii] = False
     
-    good = good.astype(bool)
     # Remove any fluxes that are "bad" for some reason.
     # Default value of cr_thresh is good for faint high-z objects
-    # Set it to a higher value if your object is bright
+    # Set it to a higher value if your object is super bright
     good = good & (~np.isnan(flux)) & (~np.isnan(wave)) & (flux < cr_thresh)
     
     print(str(np.sum(good)) + " out of " + str(len(files)) + " exposures are good.")
