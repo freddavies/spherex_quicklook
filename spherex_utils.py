@@ -90,7 +90,7 @@ def get_flam(wave,flux,omega_pix=37.932): # convert MJy/sr to flam in cgs
     flam = flux*(1e6*1e-23)*(nu/(wave*1e4))/(u.sr.to(u.arcsec*u.arcsec))*omega_pix
     return flam
     
-def get_fnu_from_flam(wave,flam): # return fnu in Jy
+def get_fnu_from_flam(wave,flam): # return fnu in mJy
     nu = 2.998e8/(wave*1e-6)
     fnu = flam*((wave*1e4)/nu)
     return 1000*fnu*1e23
@@ -121,7 +121,7 @@ def rebin_spherex(wave,flam,std,dwave,tol=0.1): # very basic binning scheme
 
 line_list = [6564.6,5008.2,4862.7,2800.0,1908.7,1550.0,1215.67]
 
-def plot_spherex_flam(wave,flam,std,zqso,label,wave_old=None,flam_old=None,flam2=None):
+def plot_spherex_flam(wave,flam,stdzqso=None,label=None,wave_old=None,flam_old=None,flam2=None):
     fig,ax = plt.subplots(1,1,figsize=(9,5))
     plt.errorbar(wave,flam,c='k',fmt='o',xerr=0.5*dwave,yerr=std,label=label,ms=3.5)
     if flam2 is not None:
@@ -132,8 +132,9 @@ def plot_spherex_flam(wave,flam,std,zqso,label,wave_old=None,flam_old=None,flam2
     plt.legend(fontsize=16)
     plt.ylim(-0.2*flam.max(),1.2*flam.max())
     plt.xlim(0.65,5.05)
-    for line in line_list:
-        plt.axvline(line*(1+zqso)*1e-4,c='k',linestyle='dotted')
+    if zqso is not None:
+        for line in line_list:
+            plt.axvline(line*(1+zqso)*1e-4,c='k',linestyle='dotted')
     plt.ylabel('Flam [cgs]',fontsize=18)
     plt.xlabel('Wavelength [um]',fontsize=18)
     plt.tick_params(which='both',top=True,right=True,direction='in',labelsize=13)
@@ -141,7 +142,7 @@ def plot_spherex_flam(wave,flam,std,zqso,label,wave_old=None,flam_old=None,flam2
     plt.tight_layout()
     plt.show()
 
-def plot_spherex_fnu(wave,fnu,std,zqso,label,wave_old=None,fnu_old=None,fnu2=None):
+def plot_spherex_fnu(wave,fnu,std,zqso=None,label=None,wave_old=None,fnu_old=None,fnu2=None):
     fig,ax = plt.subplots(1,1,figsize=(9,5))
     plt.errorbar(wave,fnu,c='k',fmt='o',xerr=0.5*dwave,yerr=std,label=label,ms=3.5)
     if fnu2 is not None:
@@ -152,8 +153,9 @@ def plot_spherex_fnu(wave,fnu,std,zqso,label,wave_old=None,fnu_old=None,fnu2=Non
     plt.legend(fontsize=16,loc='upper left')
     plt.ylim(-0.2*fnu.max(),1.2*fnu.max())
     plt.xlim(0.65,5.05)
-    for line in line_list:
-        plt.axvline(line*(1+zqso)*1e-4,c='k',linestyle='dotted')
+    if zqso is not None:
+        for line in line_list:
+            plt.axvline(line*(1+zqso)*1e-4,c='k',linestyle='dotted')
     plt.ylabel('Fnu [mJy]',fontsize=18)
     plt.xlabel('Wavelength [um]',fontsize=18)
     plt.tick_params(which='both',top=True,right=True,direction='in',labelsize=13)
