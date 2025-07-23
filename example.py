@@ -13,6 +13,8 @@ xsp = np.loadtxt('J091656-251146_stitched.txt')
 wave_old = xsp[:,0]/1e4
 flam_old = xsp[:,1]*1e-16
 
+# Plotting scripts
+# Only wave, flam, std, and dwave are required inputs, the rest are optional
 zqso = 4.85
 label = 'J0916-2511, z=4.85'
 plot_spherex_flam(wave,flam,std,dwave,zqso=zqso,label=label,wave_old=wave_old,flam_old=flam_old)

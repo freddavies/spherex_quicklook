@@ -5,7 +5,35 @@ from scipy.interpolate import RegularGridInterpolator
 import astropy.units as u
 import glob
 
-def extract_spherex(directory, mask2 = None, cr_thresh=10):
+def extract_spherex(directory, mask2 = None, cr_thresh=10.0):
+    """
+    Extract spectrophotometry from a directory full of SPHEREx quick release cutouts
+    
+    Args:
+        directory (str):
+            Directory where cutouts are stored.
+        mask2 (`numpy.ndarray`_):
+            Boolean mask for pixels where another object lives. Experimental
+        cr_thresh (float):
+            Cutoff in extracted flux (MJy/sr) above which the exposure is tossed out.
+            
+    Returns:
+        wave (`numpy.ndarray`_):
+            Central wavelengths in microns
+        flux (`numpy.ndarray`_):
+            Extracted flux in MJy/sr
+        dwave (`numpy.ndarray`_):
+            FWHM of the corresponding bandpass, in microns
+        var (`numpy.ndarray`_):
+            Variance of the extracted flux, in (MJy/sr)**2
+    
+    """
+
+    # Ensure there is a trailing / in the directory string
+    if directory[-1] != "/"
+        directory = directory + "/"
+
+    # Grab the file names and initiate arrays
     files = glob.glob(directory+"level2*cutout.fits")
     flux = np.zeros(len(files))
     wave = np.zeros(len(files))
@@ -68,7 +96,7 @@ def extract_spherex(directory, mask2 = None, cr_thresh=10):
     # Remove any fluxes that are "bad" for some reason.
     # Default value of cr_thresh is good for faint high-z objects
     # Set it to a higher value if your object is super bright
-    good = good & (~np.isnan(flux)) & (~np.isnan(wave)) & (flux < cr_thresh)
+    good = good & (~np.isnan(flux)) & (~np.isnan(wave)) & (np.abs(flux) < cr_thresh)
     
     print(str(np.sum(good)) + " out of " + str(len(files)) + " exposures are good.")
     
