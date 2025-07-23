@@ -61,7 +61,7 @@ def extract_spherex(directory, mask2 = None, cr_thresh=10.0):
             sky = ~mask
             if mask2 is not None: # In case there is a second contaminating object
                 sky = sky & ~mask2
-            sky[np.isnan(sky)] = False # remove phantom pixels
+            sky[np.isnan(img)] = False # remove phantom pixels
             
             # "Aperture photometry"
             # Sum the flux inside the object mask, remove the median sky times the number of object pixels
