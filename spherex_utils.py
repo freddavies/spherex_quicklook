@@ -20,17 +20,17 @@ def extract_spherex(directory, mask2 = None, cr_thresh=10.0):
     Returns:
         wave (`numpy.ndarray`_):
             Central wavelengths in microns
-        flux (`numpy.ndarray`_):
-            Extracted flux in MJy/sr
         dwave (`numpy.ndarray`_):
             FWHM of the corresponding bandpass, in microns
+        flux (`numpy.ndarray`_):
+            Extracted flux in MJy/sr
         var (`numpy.ndarray`_):
             Variance of the extracted flux, in (MJy/sr)**2
     
     """
 
     # Ensure there is a trailing / in the directory string
-    if directory[-1] != "/"
+    if directory[-1] != "/":
         directory = directory + "/"
 
     # Grab the file names and initiate arrays
